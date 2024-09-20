@@ -1,3 +1,5 @@
+from email.policy import default
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
@@ -21,8 +23,10 @@ class EstateProperty(models.Model):
     garage = fields.Boolean(string='Garage')
     garden = fields.Boolean(string='Garden')
     garden_area = fields.Float(string='Garden Area')
-    garden_orientation = fields.Selection([('north', 'North'), ('south', 'South'), ('east', 'East'), ('west', 'West')], string='Garden Orientation')
-
-
-
-
+    garden_orientation = fields.Selection([
+        ('north', 'North'),
+        ('south', 'South'),
+        ('east', 'East'),
+        ('west', 'West')],
+        string='Garden Orientation')
+    active = fields.Boolean(string="Active", default=False)
