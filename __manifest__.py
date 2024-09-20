@@ -11,6 +11,7 @@
     'application': True,
     #'depends': [],
     'data': [
+        'security/ir.model.access.csv'
         # 'data/estate.property.type.csv',
         # 'data/estate.property.csv',
         # 'security/ir.model.access.csv',
