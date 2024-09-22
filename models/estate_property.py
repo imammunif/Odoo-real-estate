@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 
+
 class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Estate property description"
@@ -14,7 +15,8 @@ class EstateProperty(models.Model):
     name = fields.Char(string="Title", required=True)
     description = fields.Text(string='Description')
     postcode = fields.Char(string='Postcode')
-    date_availability = fields.Date(string='Date Availability', default=lambda self: self._default_date_availability(), copy=False)
+    date_availability = fields.Date(string='Date Availability', default=lambda self: self._default_date_availability(),
+                                    copy=False)
     expected_price = fields.Float(string='Expected Price', required=True)
     selling_price = fields.Float(string='Selling Price', readonly=True, copy=False)
     bedrooms = fields.Integer(string='Bedrooms', default=2)
@@ -73,3 +75,12 @@ class EstateProperty(models.Model):
     def _compute_best_price(self):
         for prop in self:
             prop.best_price = max(prop.offer_ids.mapped("price")) if prop.offer_ids else 0.0
+
+    @api.onchange("garden")
+    def _onchange_garden(self):
+        if self.garden:
+            self.garden_area = 10
+            self.garden_orientation = "north"
+        else:
+            self.garden_area = 0
+            self.garden_orientation = False
