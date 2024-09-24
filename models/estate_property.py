@@ -3,6 +3,7 @@ from email.policy import default
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.odoo.exceptions import UserError
 
 
 class EstateProperty(models.Model):
@@ -53,7 +54,7 @@ class EstateProperty(models.Model):
     tag_ids = fields.Many2many("estate.property.tag", string="Tag")
     offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
 
-    # Computed
+    # ----------------------------------------- Computed -----------------------------------------
     total_area = fields.Integer(
         string="Total area (sqm)",
         compute="_compute_total_area",
@@ -65,7 +66,7 @@ class EstateProperty(models.Model):
         help="Best offer received"
     )
 
-    # Compute methods
+    # ----------------------------------------- Compute methods -----------------------------------------
     @api.depends("living_area", "garden_area")
     def _compute_total_area(self):
         for prop in self:
@@ -84,3 +85,15 @@ class EstateProperty(models.Model):
         else:
             self.garden_area = 0
             self.garden_orientation = False
+
+    # ----------------------------------------- Action Methods -----------------------------------------
+
+    def action_sold(self):
+        if "canceled" in self.mapped("state"):
+            raise UserError("Canceled properties cannot be sold")
+        return self.write({"state": "sold"})
+
+    def action_cancel(self):
+        if "sold" in self.mapped("state"):
+            raise UserError("Sold properties cannot be canceled")
+        return self.write({"state": "canceled"})
