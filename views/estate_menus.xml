@@ -4,6 +4,7 @@
     <menuitem id="estate_menu_root" name="Estates">
         <menuitem id="estate_advertisement_menu_action" name="Advertisements">
             <menuitem id="estate_property_menu_action" action="estate_property_action"/>
+            <menuitem id="estate_property_offer_menu_action" action="estate_property_offer_action"/>
         </menuitem>
         <menuitem id="estate_setting_menu_action" name="Settings">
             <menuitem id="estate_property_type_menu_action" action="estate_property_type_action"/>
