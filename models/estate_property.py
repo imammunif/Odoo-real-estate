@@ -15,6 +15,7 @@ class EstateProperty(models.Model):
         # (name, sql_definition, message)
         ("check_expected_price", "CHECK(expected_price > 0)", "The expected price should be strictly positive"),
         ("check_selling_price", "CHECK(selling_price >= 0)", "The selling price must be positive"),
+        ("check_name", "UNIQUE(name)", "This name was already taken, please choose others")
     ]
 
     # ----------------------------------------- Default Methods -----------------------------------------
