@@ -3,12 +3,12 @@ from email.policy import default
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.odoo.exceptions import UserError
 
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
     _description = "Estate property offer"
-
 
     price = fields.Char(string="Price", required=True)
     validity = fields.Integer(string="Validity (days)", default=7)
@@ -36,3 +36,28 @@ class EstatePropertyOffer(models.Model):
         for offer in self:
             date = offer.create_date.date() if offer.create_date else fields.Date.today()
             offer.validity = (offer.date_deadline - date).days
+
+    # ----------------------------------------- Action Methods ----------------------------------------
+
+    def action_accept(self):
+        if "accepted" in self.mapped("property_id.offer_ids.state"):
+            raise UserError("An offer as already been accepted.")
+        self.write(
+            {
+                "state": "accepted",
+            }
+        )
+        return self.mapped("property_id").write(
+            {
+                "state": "offer_accepted",
+                "selling_price": self.price,
+                "buyer_id": self.partner_id.id,
+            }
+        )
+
+    def action_refuse(self):
+        return self.write(
+            {
+                "state": "refused"
+            }
+        )
