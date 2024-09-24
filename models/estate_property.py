@@ -7,12 +7,17 @@ from odoo.odoo.exceptions import UserError
 
 
 class EstateProperty(models.Model):
+
+    # ----------------------------------------- Private Attributes -----------------------------------------
     _name = "estate.property"
     _description = "Estate property description"
     _sql_constraints = [
         # (name, sql_definition, message)
-        ("check_expected_price", "CHECK(expected_price > 0)", "The expected price should be strictly positive")
+        ("check_expected_price", "CHECK(expected_price > 0)", "The expected price should be strictly positive"),
+        ("check_selling_price", "CHECK(selling_price >= 0)", "The selling price must be positive"),
     ]
+
+    # ----------------------------------------- Default Methods -----------------------------------------
 
     def _default_date_availability(self):
         return fields.Date.context_today(self) + relativedelta(months=3)
